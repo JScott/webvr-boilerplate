@@ -23,7 +23,6 @@ var vrmgr = new WebVRManager(effect);
 // Create 3d objects
 var geometry = new THREE.BoxGeometry(10, 10, 10);
 var material = new THREE.MeshLambertMaterial({color: 'blue', ambient: 'blue'});
-//var material = new THREE.MeshLambertMaterial( { color: 'black'} ) ;
 var cube = new THREE.Mesh(geometry, material);
 
 // Position cube mesh
@@ -59,10 +58,21 @@ function animate() {
 // Kick off animation loop
 animate();
 
+function changeCubeColor() {
+  var r = Math.random();
+  var g = Math.random();
+  var b = Math.random();
+  cube.material.color.setRGB(r,g,b);
+  cube.material.ambient.setRGB(r,g,b);
+}
+
 // Listen for keyboard event and zero positional sensor on appropriate keypress.
 function onKey(event) {
   if (event.keyCode == 90) { // z
     controls.zeroSensor();
+  }
+  if (event.keyCode == 67) { // c
+    changeCubeColor();
   }
 };
 window.addEventListener('keydown', onKey, true);
