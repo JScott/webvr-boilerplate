@@ -65,6 +65,7 @@ function changeCubeColor() {
   cube.material.color.setRGB(r,g,b);
   cube.material.ambient.setRGB(r,g,b);
 }
+window.addEventListener('touchstart', changeCubeColor, false);
 
 // Listen for keyboard event and zero positional sensor on appropriate keypress.
 function onKey(event) {
