@@ -1,0 +1,60 @@
+// Code leveraged from http://hypothete.com/projects/2014/deviceOrientation/
+
+  // jerkXBig = absolute jerkX
+  // jerkX =    'devicemotion' event.acceleration - accelX
+  //            evt.acceleration.x ? (evt.acceleration.x-accelX).toFixed(2) : 0
+  //            delta of acceleration
+  // accelX =   'devicemotion' event.acceleration
+  //            evt.acceleration.x ? evt.acceleration.x.toFixed(2) : 0
+  //            storage to get delta
+
+  // how are they used...?
+  // jerkXBig > jerkX : red/blue
+  // abs >= 1 : jerk
+  // ...
+
+  function drawVideo(){
+    if(localMediaStream){
+      [ltx, rtx].forEach(function(ctx){
+        ctx.drawImage(vid, -ctx.canvas.width/4,0, ctx.canvas.width*3/2, ctx.canvas.height);
+
+        ctx.font = '20px sans-serif';
+        ctx.fillStyle = 'white';
+        ctx.fillText('absolute: ' + abs, ctx.canvas.width/2, ctx.canvas.height / 2 - 40);
+
+        ctx.fillText(alpha + ' ('+complexAlpha()+')', ctx.canvas.width/2 - 200, ctx.canvas.height / 2 - 20);
+        ctx.fillText(beta, ctx.canvas.width/2 - 200, ctx.canvas.height / 2);
+        ctx.fillText(gamma, ctx.canvas.width/2 - 200, ctx.canvas.height / 2 + 20);
+
+        ctx.fillText(accelX, ctx.canvas.width/2, ctx.canvas.height / 2 - 20);
+        ctx.fillText(accelY, ctx.canvas.width/2, ctx.canvas.height / 2);
+        ctx.fillText(accelZ, ctx.canvas.width/2, ctx.canvas.height / 2 + 20);
+
+        ctx.fillStyle = jerkXBig>jerkX?'red':'blue';
+        ctx.fillStyle = jerkXBig < 1? 'gray' : ctx.fillStyle;
+        ctx.fillText(jerkX, ctx.canvas.width/2 + 200, ctx.canvas.height / 2 - 20);
+        ctx.fillStyle = jerkYBig>jerkY?'red':'blue';
+        ctx.fillStyle = jerkYBig < 1? 'gray' : ctx.fillStyle;
+        ctx.fillText(jerkY, ctx.canvas.width/2 + 200, ctx.canvas.height / 2);
+        ctx.fillStyle = jerkZBig>jerkZ?'red':'blue';
+        ctx.fillStyle = jerkZBig < 1? 'gray' : ctx.fillStyle;
+        ctx.fillText(jerkZ, ctx.canvas.width/2 + 200, ctx.canvas.height / 2 + 20);
+      });
+    }
+    window.requestAnimationFrame(drawVideo);
+  }
+
+  window.addEventListener('devicemotion', function(evt){
+  // accel, delta, abs
+  // abs > delta : red/blue
+  // abs >= 1 : jerk
+    jerkX = evt.acceleration.x?(evt.acceleration.x-accelX).toFixed(2):0;
+    jerkXBig = Math.abs(jerkX);
+    jerkY = evt.acceleration.y?(evt.acceleration.y-accelY).toFixed(2):0;
+    jerkYBig = Math.abs(jerkY);
+    jerkZ = evt.acceleration.z?(evt.acceleration.z-accelZ).toFixed(2):0;
+    jerkZBig = Math.abs(jerkZ);
+    accelX = evt.acceleration.x?evt.acceleration.x.toFixed(2):0;
+    accelY = evt.acceleration.y?evt.acceleration.y.toFixed(2):0;
+    accelZ = evt.acceleration.z?evt.acceleration.z.toFixed(2):0;
+  }, true);
